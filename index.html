@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+  <title>Receipt Generator</title>
+
+  <!-- Malayalam Fonts -->
+
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Malayalam&family=Noto+Serif+Malayalam&display=swap" rel="stylesheet">
+
+  <style>
+    body {
+      font-family: 'Noto Sans Malayalam', sans-serif;
+      text-align: center;
+      background: #f2f2f2;
+      padding: 20px;
+    }
+
+    h2 {
+      margin-bottom: 20px;
+    }
+
+    input {
+      padding: 10px;
+      width: 260px;
+      margin: 8px;
+      font-size: 15px;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+    }
+
+    button {
+      padding: 10px 20px;
+      margin: 10px;
+      background: #007bff;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background: #0056b3;
+    }
+
+    .receipt {
+      display: none;
+      margin-top: 20px;
+    }
+
+    #receiptArea {
+      position: relative;
+      width: 100%;
+      max-width: 500px;
+      margin: auto;
+    }
+
+    #receiptArea img {
+      width: 100%;
+      display: block;
+    }
+
+    /* TEXT ON DOTTED LINES */
+    .lineText {
+      position: absolute;
+      width: 55%;
+      text-align: left;
+      font-family: 'Noto Serif Malayalam', serif;
+      font-size: 20px;
+      font-weight: bold;
+      color: black;
+    }
+
+    #previewArea {
+      margin-top: 20px;
+    }
+
+  </style>
+
+</head>
+
+<body>
+
+<h2>വിശദാംശങ്ങൾ നൽകുക</h2>
+
+<input id="name" placeholder="പേര്"><br> <input id="house" placeholder="വീട് പേര്"><br> <input id="star" placeholder="നക്ഷത്രം"><br>
+
+<button onclick="generateReceipt()">Generate</button>
+
+<div class="receipt" id="receipt">
+
+  <div id="receiptArea">
+
+```
+<!-- Receipt image -->
+<img src="receipt.jpg">
+
+<!-- NAME (after label, on dots) -->
+<div class="lineText" style="top:34%; left:30%;" id="rname"></div>
+
+<!-- HOUSE NAME -->
+<div class="lineText" style="top:49%; left:30%;" id="rhouse"></div>
+
+<!-- STAR -->
+<div class="lineText" style="top:64%; left:30%;" id="rstar"></div>
+```
+
+  </div>
+
+<button onclick="downloadReceipt()">Download Receipt</button>
+
+</div>
+
+<div id="previewArea"></div>
+
+<!-- Library -->
+
+<script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
+
+<script>
+
+function generateReceipt(){
+
+  let name = document.getElementById("name").value;
+  let house = document.getElementById("house").value;
+  let star = document.getElementById("star").value;
+
+  if(name === "" || house === "" || star === ""){
+    alert("Please fill all fields!");
+    return;
+  }
+
+  document.getElementById("rname").innerText = name;
+  document.getElementById("rhouse").innerText = house;
+  document.getElementById("rstar").innerText = star;
+
+  document.getElementById("receipt").style.display = "block";
+}
+
+function downloadReceipt(){
+
+  html2canvas(document.getElementById("receiptArea")).then(canvas => {
+
+    let img = canvas.toDataURL("image/png");
+
+    document.getElementById("previewArea").innerHTML = "";
+
+    // Preview
+    let preview = document.createElement("img");
+    preview.src = img;
+    preview.style.width = "300px";
+    preview.style.display = "block";
+    preview.style.margin = "20px auto";
+
+    document.getElementById("previewArea").appendChild(preview);
+
+    // Download button
+    let btn = document.createElement("button");
+    btn.innerText = "Download";
+
+    btn.onclick = function(){
+      let link = document.createElement("a");
+      link.href = img;
+      link.download = "receipt.png";
+      link.click();
+    };
+
+    document.getElementById("previewArea").appendChild(btn);
+
+  });
+
+}
+
+</script>
+
+</body>
+</html>
